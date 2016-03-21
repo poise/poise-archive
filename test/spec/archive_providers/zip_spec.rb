@@ -14,17 +14,19 @@
 # limitations under the License.
 #
 
-require 'poise_archive/archive_providers/base'
+require 'spec_helper'
 
+describe PoiseArchive::ArchiveProviders::Zip do
+  step_into(:poise_archive)
+  let(:archive_provider) { chef_run.poise_archive('myapp').provider_for_action(:unpack) }
 
-module PoiseArchive
-  module ArchiveProviders
-    # The `tar` provider class for `poise_archive` to install from TAR archives.
-    #
-    # @see PoiseArchive::Resources::PoiseArchive::Resource
-    # @provides poise_archive
-    class Tar < Base
-      provides_extension(/\.t(ar|gz|bz|xz)/)
+  context 'with a .zip path' do
+    recipe do
+      poise_archive 'myapp' do
+        path 'myapp.zip'
+      end
     end
-  end
+
+    it { expect(archive_provider).to be_a described_class }
+  end # /context with a .zip path
 end

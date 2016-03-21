@@ -19,12 +19,12 @@ require 'poise_archive/archive_providers/base'
 
 module PoiseArchive
   module ArchiveProviders
-    # The `tar` provider class for `poise_archive` to install from TAR archives.
+    # The `zip` provider class for `poise_archive` to install from ZIP archives.
     #
     # @see PoiseArchive::Resources::PoiseArchive::Resource
     # @provides poise_archive
-    class Tar < Base
-      provides_extension(/\.t(ar|gz|bz|xz)/)
+    class Zip < Base
+      provides_extension(/\.zip$/)
     end
   end
 end

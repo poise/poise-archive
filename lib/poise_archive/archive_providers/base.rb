@@ -26,7 +26,15 @@ module PoiseArchive
     # @provides poise_archive
     class Base < Chef::Provider
       include Poise
-      provides(:poise_archive)
+
+      def self.provides_extension(match)
+        provides(:poise_archive)
+        @provides_extension = match
+      end
+
+      def self.provides?(node, resource)
+        super && (!@provides_extension || @provides_extension.match(resource.path))
+      end
 
       def action_unpack
       end

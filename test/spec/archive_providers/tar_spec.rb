@@ -17,5 +17,56 @@
 require 'spec_helper'
 
 describe PoiseArchive::ArchiveProviders::Tar do
+  step_into(:poise_archive)
+  let(:archive_provider) { chef_run.poise_archive('myapp').provider_for_action(:unpack) }
 
+  context 'with a .tar path' do
+    recipe do
+      poise_archive 'myapp' do
+        path 'myapp.tar'
+      end
+    end
+
+    it { expect(archive_provider).to be_a described_class }
+  end # /context with a .tar path
+
+  context 'with a .tar.gz path' do
+    recipe do
+      poise_archive 'myapp' do
+        path 'myapp.tar.gz'
+      end
+    end
+
+    it { expect(archive_provider).to be_a described_class }
+  end # /context with a .tar.gz path
+
+  context 'with a .tar.bz path' do
+    recipe do
+      poise_archive 'myapp' do
+        path 'myapp.tar.bz'
+      end
+    end
+
+    it { expect(archive_provider).to be_a described_class }
+  end # /context with a .tar.bz path
+
+  context 'with a .tgz path' do
+    recipe do
+      poise_archive 'myapp' do
+        path 'myapp.tgz'
+      end
+    end
+
+    it { expect(archive_provider).to be_a described_class }
+  end # /context with a .tgz path
+
+  context 'with a .tbz path' do
+    recipe do
+      poise_archive 'myapp' do
+        path 'myapp.tbz'
+      end
+    end
+
+    it { expect(archive_provider).to be_a described_class }
+  end # /context with a .tbz path
 end
