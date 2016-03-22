@@ -37,7 +37,9 @@ module PoiseArchive
       end
 
       def action_unpack
+        raise NotImplementedError
       end
+
     end
   end
 end

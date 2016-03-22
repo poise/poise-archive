@@ -17,8 +17,6 @@
 require 'spec_helper'
 
 describe PoiseArchive::Resources::PoiseArchive do
-  step_into(:poise_archive)
-
   context 'an absolute path' do
     context 'an implicit destination' do
       recipe do

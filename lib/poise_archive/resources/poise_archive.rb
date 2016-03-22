@@ -37,7 +37,8 @@ module PoiseArchive
         attribute(:path, name_attribute: true)
         attribute(:destination, kind_of: [String, NilClass, FalseClass])
         attribute(:group) # TODO: verify
-        attribute(:user)
+        attribute(:strip_components, kind_of: Integer, default: 1)
+        attribute(:user) # TODO: verify
 
         def absolute_path
           ::File.expand_path(path, Chef::Config[:file_cache_path])

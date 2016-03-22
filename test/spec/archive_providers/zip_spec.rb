@@ -17,7 +17,7 @@
 require 'spec_helper'
 
 describe PoiseArchive::ArchiveProviders::Zip do
-  step_into(:poise_archive)
+  # step_into(:poise_archive)
   let(:archive_provider) { chef_run.poise_archive('myapp').provider_for_action(:unpack) }
 
   context 'with a .zip path' do
