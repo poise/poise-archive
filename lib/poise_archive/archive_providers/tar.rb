@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+require 'fileutils'
 require 'tmpdir'
 
 require 'poise_archive/archive_providers/base'
@@ -28,17 +29,14 @@ module PoiseArchive
     class Tar < Base
       provides_extension(/\.t(ar|gz|bz|xz)/)
 
-      # `unpack` action for `poise_archive`. Unpack a TAR archive.
-      #
-      # @return [void]
-      def action_unpack
+      private
+
+      def unpack_archive
         notifying_block do
           install_prereqs
         end
-        unpack_archive
+        unpack_tar
       end
-
-      private
 
       # Install any needed prereqs.
       #
@@ -58,7 +56,7 @@ module PoiseArchive
       # Unpack the archive and process `strip_components`.
       #
       # @return [void]
-      def unpack_archive
+      def unpack_tar
         # Build the tar command. -J for xz isn't going to work on non-GNU tar,
         # cry me a river.
         cmd = %w{tar}
@@ -76,6 +74,9 @@ module PoiseArchive
         # Create a temp directory to unpack in to. Do I want to try and force
         # this to be on the same filesystem as the target?
         self.class.mktmpdir do |dir|
+          # Change the temp dir to be owned by the unpack user if needed.
+          FileUtils.chown(new_resource.user, new_resource.group, dir) if new_resource.user || new_resource.group
+
           # Run the unpack into the temp dir.
           poise_shell_out!(cmd, cwd: dir, group: new_resource.group, user: new_resource.user)
 
@@ -98,7 +99,11 @@ module PoiseArchive
         current_depth = 0
         while current_depth <= depth
           entries.map! do |ent|
-            Dir.entries(ent).select {|e| e != '.' && e != '..' }.map {|e| ::File.join(ent, e) }
+            if ::File.directory?(ent)
+              Dir.entries(ent).select {|e| e != '.' && e != '..' }.map {|e| ::File.join(ent, e) }
+            else
+              []
+            end
           end
           entries.flatten!
           current_depth += 1

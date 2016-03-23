@@ -24,6 +24,8 @@ describe PoiseArchive::ArchiveProviders::Tar do
     let(:archive_provider) { chef_run.poise_archive('myapp').provider_for_action(:unpack) }
     before do
       allow(described_class).to receive(:mktmpdir).and_yield('/test')
+      allow(Dir).to receive(:entries).and_call_original
+      allow(Dir).to receive(:entries).with('/root/myapp').and_return([])
       expect_any_instance_of(described_class).to receive(:poise_shell_out!).with(tar_cmd, cwd: '/test', group: nil, user: nil)
       expect_any_instance_of(described_class).to receive(:entries_at_depth).with('/test', 1).and_return(%w{/test/myapp/bin /test/myapp/src})
       expect(File).to receive(:rename).with('/test/myapp/bin', '/root/myapp/bin')
@@ -62,6 +64,17 @@ describe PoiseArchive::ArchiveProviders::Tar do
 
       it { expect(archive_provider).to be_a described_class }
     end # /context with a .tar.bz path
+
+    context 'with a .tar.bz2 path' do
+      let(:tar_cmd) { %w{tar -xjvf /root/myapp.tar.bz2} }
+      recipe do
+        poise_archive 'myapp' do
+          path '/root/myapp.tar.bz2'
+        end
+      end
+
+      it { expect(archive_provider).to be_a described_class }
+    end # /context with a .tar.bz2 path
 
     context 'with a .tgz path' do
       let(:tar_cmd) { %w{tar -xzvf /root/myapp.tgz} }
