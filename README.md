@@ -49,6 +49,12 @@ end
   `Chef::Config[:file_cache_path]`. *(name attribute)*
 * `destination` – Path to unpack the archive to. If not specified, the path of
   the archive without the file extension is used. *(default: auto)*
+* `group` – Group to run the unpack as.
+* `keep_existing` – Keep existing files in the destination directory when
+  unpacking. *(default: false)*
+* `strip_components` – Number of intermediary directories to skip when
+  unpacking. Works like GNU tar's `--strip-components`. *(default: 1)*
+* `user` – User to run the unpack as.
 
 ## Sponsors
 
