@@ -104,15 +104,21 @@ describe PoiseArchive::ArchiveProviders::Tar do
     subject { described_class.new(nil, nil).send(:entries_at_depth, '/test', depth) }
     before do
       allow(Dir).to receive(:entries).and_call_original
-      allow(Dir).to receive(:entries).with('/test').and_return(%w{. .. a})
+      allow(Dir).to receive(:entries).with('/test').and_return(%w{. .. a b})
       allow(Dir).to receive(:entries).with('/test/a').and_return(%w{. .. aa ab})
       allow(Dir).to receive(:entries).with('/test/a/aa').and_return(%w{. .. aaa})
       allow(Dir).to receive(:entries).with('/test/a/ab').and_return(%w{. .. aba abb})
+      allow(File).to receive(:directory?).and_call_original
+      allow(File).to receive(:directory?).with('/test').and_return(true)
+      allow(File).to receive(:directory?).with('/test/a').and_return(true)
+      allow(File).to receive(:directory?).with('/test/b').and_return(false)
+      allow(File).to receive(:directory?).with('/test/a/aa').and_return(true)
+      allow(File).to receive(:directory?).with('/test/a/ab').and_return(true)
     end
 
     context 'with depth 0' do
       let(:depth) { 0 }
-      it { is_expected.to eq %w{/test/a} }
+      it { is_expected.to eq %w{/test/a /test/b} }
     end # /context with depth 0
 
     context 'with depth 1' do
