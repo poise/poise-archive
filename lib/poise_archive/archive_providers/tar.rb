@@ -47,14 +47,23 @@ module PoiseArchive
       #
       # @return [void]
       def unpack_tar
+        entry_name = nil
         tar_each do |entry|
-          entry_name = if entry.full_name == TAR_LONGLINK
-            entry.read.strip
-          else
-            entry.full_name
-          end.split(/\//).drop(new_resource.strip_components).join('/')
-          next if entry_name.empty?
-          dest = ::File.join(new_resource.destination, entry_name)
+          if entry.full_name == TAR_LONGLINK
+            # Stash the longlink name so it will be used for the next entry.
+            entry_name = entry.read.strip
+            # And then skip forward because this isn't a real block.
+            next
+          end
+          # For entries not preceded by a longlink block, use the normal name.
+          entry_name ||= entry.full_name
+          # Process strip_components by mangling the name.
+          parsed_name = entry_name.split(/\//).drop(new_resource.strip_components).join('/')
+          # Reset entry_name for the next entry.
+          entry_name = nil
+          # If strip_components wiped out the name, don't process this entry.
+          next if parsed_name.empty?
+          dest = ::File.join(new_resource.destination, parsed_name)
           if entry.directory?
             Dir.mkdir(dest, entry.header.mode)
           elsif entry.file?
