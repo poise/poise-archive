@@ -1,5 +1,9 @@
 # Poise-Archive Changelog
 
+## v1.1.1
+
+* Fix GNU tar longlink extension.
+
 ## v1.1.0
 
 * Scrap the original tar implementation in favor of a 100% pure-Ruby solution.
