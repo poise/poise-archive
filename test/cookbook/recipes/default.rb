@@ -20,8 +20,7 @@ directory '/test' do
 end
 
 # Tests for each fixture file.
-# %w{tar tar.gz tar.bz2}.each do |ext|
-%w{tar tar.gz}.each do |ext|
+%w{tar tar.gz tar.bz2}.each do |ext|
   cookbook_file "/test/myapp-1.0.0.#{ext}" do
     source "myapp-1.0.0.#{ext}"
   end

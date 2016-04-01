@@ -45,9 +45,9 @@ describe 'tar.gz' do
   it_should_behave_like 'a poise_archive test', 'tar.gz'
 end
 
-# describe 'tar.bz2' do
-#   it_should_behave_like 'a poise_archive test', 'tar.bz2'
-# end
+describe 'tar.bz2' do
+  it_should_behave_like 'a poise_archive test', 'tar.bz2'
+end
 
 describe 'core features' do
   describe file('/test/user') do

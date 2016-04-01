@@ -74,16 +74,16 @@ describe PoiseArchive::ArchiveProviders::Tar do
       it_should_behave_like 'a poise_archive test', 'tar.gz'
     end # /context with a .tar.gz path
 
-    # context 'with a .tar.bz2 path' do
-    #   it_should_behave_like 'a poise_archive test', 'tar.bz2'
-    # end # /context with a .tar.bz2 path
+    context 'with a .tar.bz2 path' do
+      it_should_behave_like 'a poise_archive test', 'tar.bz2'
+    end # /context with a .tar.bz2 path
 
     context 'with a .tgz path' do
       it_should_behave_like 'a poise_archive test', 'tgz'
     end # /context with a .tgz path
 
-    # context 'with a .tbz2 path' do
-    #   it_should_behave_like 'a poise_archive test', 'tbz2'
-    # end # /context with a .tbz2 path
+    context 'with a .tbz2 path' do
+      it_should_behave_like 'a poise_archive test', 'tbz2'
+    end # /context with a .tbz2 path
   end # /describe #action_unpack
 end

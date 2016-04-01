@@ -77,3 +77,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+BZip2 implementation is based on RBzip2. Copyright Sebastian Staudt, Brian Lopez.
+RBzip2 code used under the terms of the new BSD license.

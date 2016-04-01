@@ -19,6 +19,7 @@ require 'rubygems/package'
 require 'zlib'
 
 require 'poise_archive/archive_providers/base'
+require 'poise_archive/bzip2'
 
 
 module PoiseArchive
@@ -39,23 +40,7 @@ module PoiseArchive
       private
 
       def unpack_archive
-        install_prereqs
         unpack_tar
-      end
-
-      # Install any needed prereqs.
-      #
-      # @return [void]
-      def install_prereqs
-        # Tar and Gzip come with Ruby.
-        if new_resource.path =~ /\.t?bz/
-          # This isn't working yet. TODO.
-          raise NotImplementedError
-          # Install and load rbzip2 for BZip2 handling.
-          notifying_block do
-            chef_gem 'rbzip2'
-          end
-        end
       end
 
       # Unpack the archive.
@@ -111,9 +96,8 @@ module PoiseArchive
         when /\.t?gz/
           Zlib::GzipReader.wrap(@raw_file)
         when /\.t?bz/
-          require 'rbzip2'
           # This can't take a block, hence the gross non-block forms for everything.
-          RBzip2::Decompressor.new(@raw_file)
+          PoiseArchive::Bzip2::Decompressor.new(@raw_file)
         else
           raise RuntimeError.new("Unknown or unsupported file extension for #{new_resource.path}")
         end
