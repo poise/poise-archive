@@ -47,23 +47,11 @@ module PoiseArchive
       #
       # @return [void]
       def unpack_tar
-        entry_name = nil
-        tar_each do |entry|
-          if entry.full_name == TAR_LONGLINK
-            # Stash the longlink name so it will be used for the next entry.
-            entry_name = entry.read.strip
-            # And then skip forward because this isn't a real block.
-            next
-          end
-          # For entries not preceded by a longlink block, use the normal name.
-          entry_name ||= entry.full_name
-          # Process strip_components by mangling the name.
-          parsed_name = entry_name.split(/\//).drop(new_resource.strip_components).join('/')
-          # Reset entry_name for the next entry.
-          entry_name = nil
+        tar_each_with_longlink do |entry|
+          entry_name = entry.full_name.split(/\//).drop(new_resource.strip_components).join('/')
           # If strip_components wiped out the name, don't process this entry.
-          next if parsed_name.empty?
-          dest = ::File.join(new_resource.destination, parsed_name)
+          next if entry_name.empty?
+          dest = ::File.join(new_resource.destination, entry_name)
           if entry.directory?
             Dir.mkdir(dest, entry.header.mode)
           elsif entry.file?
@@ -78,6 +66,25 @@ module PoiseArchive
             raise RuntimeError.new("Unknown tar entry type #{entry.header.typeflag.inspect} in #{new_resource.path}")
           end
           FileUtils.chown(new_resource.user, new_resource.group, dest)
+        end
+      end
+
+      def tar_each_with_longlink(&block)
+        entry_name = nil
+        tar_each do |entry|
+          if entry.full_name == TAR_LONGLINK
+            # Stash the longlink name so it will be used for the next entry.
+            entry_name = entry.read.strip
+            # And then skip forward because this isn't a real block.
+            next
+          end
+          # For entries not preceded by a longlink block, use the normal name.
+          entry_name ||= entry.full_name
+          # Make the entry return the correct name.
+          entry.define_singleton_method(:full_name) { entry_name }
+          block.call(entry)
+          # Reset entry_name for the next entry.
+          entry_name = nil
         end
       end
 
