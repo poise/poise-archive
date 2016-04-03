@@ -1,5 +1,9 @@
 # Poise-Archive Changelog
 
+## v1.1.2
+
+* Fix compat with older Ruby that doesn't include `Entry#symlink?`.
+
 ## v1.1.1
 
 * Fix GNU tar longlink extension.
