@@ -60,7 +60,7 @@ module PoiseArchive
                 dest_f.write(buf)
               end
             end
-          elsif entry.symlink?
+          elsif entry.header.typeflag == '2' # symlink? is new in Ruby 2.0, apparently.
             ::File.symlink(entry.header.linkname, dest)
           else
             raise RuntimeError.new("Unknown tar entry type #{entry.header.typeflag.inspect} in #{new_resource.path}")
