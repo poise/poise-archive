@@ -49,6 +49,10 @@ describe 'tar.bz2' do
   it_should_behave_like 'a poise_archive test', 'tar.bz2'
 end
 
+describe 'zip' do
+  it_should_behave_like 'a poise_archive test', 'zip'
+end
+
 describe 'core features' do
   describe file('/test/user') do
     it { is_expected.to be_owned_by 'poise' }

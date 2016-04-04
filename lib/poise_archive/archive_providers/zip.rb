@@ -25,6 +25,38 @@ module PoiseArchive
     # @provides poise_archive
     class Zip < Base
       provides_extension(/\.zip$/)
+
+      private
+
+      def unpack_archive
+        check_rubyzip
+        unpack_zip
+      end
+
+      def check_rubyzip
+        require 'zip'
+      rescue LoadError
+        notifying_block do
+          install_rubyzip
+        end
+        require 'zip'
+      end
+
+      def install_rubyzip
+        chef_gem 'rubyzip'
+      end
+
+      def unpack_zip
+        ::Zip::File.open(new_resource.path) do |zip_file|
+          zip_file.each do |entry|
+            entry_name = entry.name.split(/\//).drop(new_resource.strip_components).join('/')
+            # If strip_components wiped out the name, don't process this entry.
+            next if entry_name.empty?
+            entry.extract(::File.join(new_resource.destination, entry_name))
+          end
+        end
+      end
+
     end
   end
 end
