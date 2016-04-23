@@ -9,8 +9,6 @@
 
 A [Chef](https://www.chef.io/) cookbook to unpack file archives like TAR and ZIP files.
 
-**NOTE:** ZIP files are not supported yet, stay tuned.
-
 ## Quick Start
 
 To download an unpack and archive:
