@@ -16,6 +16,7 @@
 
 require 'chef/platform/provider_priority_map'
 
+require 'poise_archive/archive_providers/gnu_tar'
 require 'poise_archive/archive_providers/tar'
 require 'poise_archive/archive_providers/zip'
 
@@ -27,6 +28,7 @@ module PoiseArchive
   module ArchiveProviders
     # Set up priority maps
     Chef::Platform::ProviderPriorityMap.instance.priority(:poise_archive, [
+      PoiseArchive::ArchiveProviders::GnuTar,
       PoiseArchive::ArchiveProviders::Tar,
       PoiseArchive::ArchiveProviders::Zip,
     ])

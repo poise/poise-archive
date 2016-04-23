@@ -37,20 +37,56 @@ RSpec.shared_examples 'a poise_archive test' do |ext|
   end
 end
 
-describe 'tar' do
-  it_should_behave_like 'a poise_archive test', 'tar'
+describe 'default provider' do
+  describe 'tar' do
+    it_should_behave_like 'a poise_archive test', 'default/tar'
+  end
+
+  describe 'tar.gz' do
+    it_should_behave_like 'a poise_archive test', 'default/tar.gz'
+  end
+
+  describe 'tar.bz2' do
+    it_should_behave_like 'a poise_archive test', 'default/tar.bz2'
+  end
+
+  describe 'zip' do
+    it_should_behave_like 'a poise_archive test', 'default/zip'
+  end
 end
 
-describe 'tar.gz' do
-  it_should_behave_like 'a poise_archive test', 'tar.gz'
+describe 'Tar provider' do
+  describe 'tar' do
+    it_should_behave_like 'a poise_archive test', 'Tar/tar'
+  end
+
+  describe 'tar.gz' do
+    it_should_behave_like 'a poise_archive test', 'Tar/tar.gz'
+  end
+
+  describe 'tar.bz2' do
+    it_should_behave_like 'a poise_archive test', 'Tar/tar.bz2'
+  end
 end
 
-describe 'tar.bz2' do
-  it_should_behave_like 'a poise_archive test', 'tar.bz2'
+describe 'GnuTar provider', if: File.exist?('/test/GnuTar') do
+  describe 'tar' do
+    it_should_behave_like 'a poise_archive test', 'GnuTar/tar'
+  end
+
+  describe 'tar.gz' do
+    it_should_behave_like 'a poise_archive test', 'GnuTar/tar.gz'
+  end
+
+  describe 'tar.bz2' do
+    it_should_behave_like 'a poise_archive test', 'GnuTar/tar.bz2'
+  end
 end
 
-describe 'zip' do
-  it_should_behave_like 'a poise_archive test', 'zip'
+describe 'Zip provider' do
+  describe 'zip' do
+    it_should_behave_like 'a poise_archive test', 'Zip/zip'
+  end
 end
 
 describe 'core features' do
