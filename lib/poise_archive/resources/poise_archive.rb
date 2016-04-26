@@ -57,7 +57,7 @@ module PoiseArchive
         #   like GNU tar's --strip-components.
         #   @return [Integer]
         attribute(:strip_components, kind_of: Integer, default: 1)
-        # @!attribute group
+        # @!attribute user
         #   User to run the unpack as.
         #   @return [String, Integer, nil, false]
         attribute(:user, kind_of: [String, Integer, NilClass, FalseClass])
