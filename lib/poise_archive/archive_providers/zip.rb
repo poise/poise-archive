@@ -56,7 +56,7 @@ module PoiseArchive
             next if entry_name.empty?
             entry_path = ::File.join(new_resource.destination, entry_name)
             entry.extract(entry_path)
-            @zip_entry_paths << entry_path
+            @zip_entry_paths << [entry.directory? ? :directory : entry.file? ? :file : :link, entry_path]
           end
         end
       end
@@ -64,8 +64,8 @@ module PoiseArchive
       def chown_entries
         paths = @zip_entry_paths
         notifying_block do
-          paths.each do |path|
-            send(::File.directory?(path) ? :directory : :file, path) do
+          paths.each do |type, path|
+            send(type, path) do
               group new_resource.group
               owner new_resource.user
             end

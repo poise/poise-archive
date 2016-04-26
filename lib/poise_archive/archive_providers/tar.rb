@@ -55,18 +55,20 @@ module PoiseArchive
           dest = ::File.join(new_resource.destination, entry_name)
           if entry.directory?
             Dir.mkdir(dest, entry.header.mode)
+            @tar_entry_paths << [:directory, dest]
           elsif entry.file?
             ::File.open(dest, 'wb', entry.header.mode) do |dest_f|
               while buf = entry.read(4096)
                 dest_f.write(buf)
               end
             end
+            @tar_entry_paths << [:file, dest]
           elsif entry.header.typeflag == '2' # symlink? is new in Ruby 2.0, apparently.
             ::File.symlink(entry.header.linkname, dest)
+            @tar_entry_paths << [:link, dest]
           else
             raise RuntimeError.new("Unknown tar entry type #{entry.header.typeflag.inspect} in #{new_resource.path}")
           end
-          @tar_entry_paths << dest
         end
       end
 
@@ -142,8 +144,8 @@ module PoiseArchive
       def chown_entries
         paths = @tar_entry_paths
         notifying_block do
-          paths.each do |path|
-            send(::File.directory?(path) ? :directory : :file, path) do
+          paths.each do |type, path|
+            send(type, path) do
               group new_resource.group
               owner new_resource.user
             end
