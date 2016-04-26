@@ -70,10 +70,13 @@ module PoiseArchive
           ::File.expand_path(path, Chef::Config[:file_cache_path])
         end
 
+        # Filename components to ignore.
+        # @api private
+        BASENAME_IGNORE = /(\.(t?(ar|gz|bz2?|xz)|zip))+$/
+
         def absolute_destination
           destination || begin
-            basename = ::File.basename(path)
-            ::File.join(::File.dirname(absolute_path), basename.split(/\./).find {|part| !part.empty? } || basename)
+            ::File.join(::File.dirname(absolute_path), ::File.basename(path).gsub(BASENAME_IGNORE, ''))
           end
         end
       end
