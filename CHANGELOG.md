@@ -1,5 +1,11 @@
 # Poise-Archive Changelog
 
+## v1.2.0
+
+* Add back a tar-binary provider called `GnuTar`, used by default on Linux.
+* Support for ZIP files via RubyZip.
+* Full Windows support, including with the `user` and `group` properties.
+
 ## v1.1.2
 
 * Fix compat with older Ruby that doesn't include `Entry#symlink?`.
