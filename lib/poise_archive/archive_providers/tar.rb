@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 
-require 'fileutils'
 require 'rubygems/package'
 require 'zlib'
 
@@ -41,12 +40,14 @@ module PoiseArchive
 
       def unpack_archive
         unpack_tar
+        chown_entries if new_resource.user || new_resource.group
       end
 
       # Unpack the archive.
       #
       # @return [void]
       def unpack_tar
+        @tar_entry_paths = []
         tar_each_with_longlink do |entry|
           entry_name = entry.full_name.split(/\//).drop(new_resource.strip_components).join('/')
           # If strip_components wiped out the name, don't process this entry.
@@ -65,7 +66,7 @@ module PoiseArchive
           else
             raise RuntimeError.new("Unknown tar entry type #{entry.header.typeflag.inspect} in #{new_resource.path}")
           end
-          FileUtils.chown(new_resource.user, new_resource.group, dest)
+          @tar_entry_paths << dest
         end
       end
 
@@ -135,6 +136,18 @@ module PoiseArchive
         if @raw_file
           @raw_file.close unless @raw_file.closed?
           @raw_file = nil
+        end
+      end
+
+      def chown_entries
+        paths = @tar_entry_paths
+        notifying_block do
+          paths.each do |path|
+            send(::File.directory?(path) ? :directory : :file, path) do
+              group new_resource.group
+              owner new_resource.user
+            end
+          end
         end
       end
 
