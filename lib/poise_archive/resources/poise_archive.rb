@@ -62,6 +62,10 @@ module PoiseArchive
         #   @return [String, Integer, nil, false]
         attribute(:user, kind_of: [String, Integer, NilClass, FalseClass])
 
+        # Alias for the forgetful.
+        # @api private
+        alias_method :owner, :user
+
         def absolute_path
           ::File.expand_path(path, Chef::Config[:file_cache_path])
         end
