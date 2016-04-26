@@ -31,6 +31,7 @@ module PoiseArchive
       def unpack_archive
         check_rubyzip
         unpack_zip
+        chown_entries if new_resource.user || new_resource.group
       end
 
       def check_rubyzip
@@ -47,12 +48,27 @@ module PoiseArchive
       end
 
       def unpack_zip
+        @zip_entry_paths = []
         ::Zip::File.open(new_resource.path) do |zip_file|
           zip_file.each do |entry|
             entry_name = entry.name.split(/\//).drop(new_resource.strip_components).join('/')
             # If strip_components wiped out the name, don't process this entry.
             next if entry_name.empty?
-            entry.extract(::File.join(new_resource.destination, entry_name))
+            entry_path = ::File.join(new_resource.destination, entry_name)
+            entry.extract(entry_path)
+            @zip_entry_paths << entry_path
+          end
+        end
+      end
+
+      def chown_entries
+        paths = @zip_entry_paths
+        notifying_block do
+          paths.each do |path|
+            send(::File.directory?(path) ? :directory : :file, path) do
+              group new_resource.group
+              owner new_resource.user
+            end
           end
         end
       end
