@@ -55,11 +55,13 @@ module PoiseArchive
       #
       # @return [void]
       def action_unpack
-        notifying_block do
-          create_directory
+        converge_by("unpack archive #{new_resource.path} to #{new_resource.absolute_destination}") do
+          notifying_block do
+            create_directory
+          end
+          empty_directory
+          unpack_archive
         end
-        empty_directory
-        unpack_archive
       end
 
       private
