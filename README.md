@@ -25,6 +25,12 @@ remote_file "#{Chef::Config[:file_cache_path]}/myapp.tgz" do
 end
 ```
 
+## Platforms
+
+This cookbook supports all platforms (including Windows) but non-Linux platforms
+may see very slow tar file unpacking when using the pure-Ruby fallback
+implementation.
+
 ## Resources
 
 ### `poise_archive`
