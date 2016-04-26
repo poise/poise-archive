@@ -19,6 +19,16 @@ directory '/test' do
   mode '777'
 end
 
+# Test user/group.
+group 'gpoise' do
+  system true
+end
+
+user 'poise' do
+  group 'gpoise'
+  system true
+end
+
 # Tests for each fixture file.
 [
   {ext: 'tar', provider: nil},
@@ -61,32 +71,18 @@ end
     provider test[:provider] if test[:provider]
     strip_components 2
   end
+
+  poise_archive "#{test_base}/myapp-1.0.0.#{test[:ext]}_user" do
+    path "#{test_base}/myapp-1.0.0.#{test[:ext]}"
+    destination "#{test_base}/#{test[:ext]}_user"
+    provider test[:provider] if test[:provider]
+    user 'poise'
+  end
 end
 
 # Some general tests for core features.
-# Test user-specific unpacking.
-group 'poise' do
-  system true
-end
-
-user 'poise' do
-  group 'poise'
-  system true
-end
-
 cookbook_file '/test/myapp-1.0.0.tar' do
   source 'myapp-1.0.0.tar'
-end
-
-directory '/test/user' do
-  group 'poise'
-  mode '700'
-  owner 'poise'
-end
-
-poise_archive '/test/myapp-1.0.0.tar' do
-  destination '/test/user'
-  user 'poise'
 end
 
 # Test keep_existing true.

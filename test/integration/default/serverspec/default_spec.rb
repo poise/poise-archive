@@ -44,6 +44,14 @@ RSpec.shared_examples 'a poise_archive test' do |ext|
   describe file("#{base}_2/main.c") do
     it { is_expected.to be_a_file }
   end
+  describe file("#{base}_user") do
+    it { is_expected.to be_owned_by 'poise' }
+    it { is_expected.to be_mode '755' } unless os[:family] == 'windows'
+  end
+  describe file("#{base}_user/README") do
+    it { is_expected.to be_owned_by 'poise' }
+    it { is_expected.to be_mode '644' } unless os[:family] == 'windows'
+  end
 end
 
 describe 'default provider' do
@@ -99,13 +107,6 @@ describe 'Zip provider' do
 end
 
 describe 'core features' do
-  describe file('/test/user') do
-    it { is_expected.to be_owned_by 'poise' }
-    it { is_expected.to be_mode '700' }
-  end
-  describe file('/test/user/README') do
-    it { is_expected.to be_owned_by 'poise' }
-  end
   describe file('/test/keep/EXISTING') do
     it { is_expected.to be_a_file }
   end
