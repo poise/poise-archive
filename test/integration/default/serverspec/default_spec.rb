@@ -14,8 +14,17 @@
 # limitations under the License.
 #
 
+require 'rbconfig'
+
 require 'serverspec'
-set :backend, :exec
+
+if RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/
+  set :backend, :cmd
+  set :os, :family => 'windows'
+else
+  set :backend, :exec
+end
+
 
 RSpec.shared_examples 'a poise_archive test' do |ext|
   base = "/test/#{ext}"
