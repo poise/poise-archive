@@ -16,5 +16,5 @@
 
 
 module PoiseArchive
-  VERSION = '1.1.3.pre'
+  VERSION = '1.2.0'
 end
