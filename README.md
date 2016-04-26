@@ -7,7 +7,9 @@
 [![Gemnasium](https://img.shields.io/gemnasium/poise/poise-archive.svg)](https://gemnasium.com/poise/poise-archive)
 [![License](https://img.shields.io/badge/license-Apache_2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-A [Chef](https://www.chef.io/) cookbook to unpack file archives like TAR and ZIP files.
+A [Chef](https://www.chef.io/) cookbook to unpack file archives.
+
+It supports `.tar`, `.tar.gz`, `.tar.bz2`, and `.zip` archive files.
 
 ## Quick Start
 
