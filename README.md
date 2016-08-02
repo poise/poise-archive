@@ -16,14 +16,8 @@ It supports `.tar`, `.tar.gz`, `.tar.bz2`, and `.zip` archive files.
 To download an unpack and archive:
 
 ```ruby
-poise_archive 'myapp.tgz' do
-  action :nothing
+poise_archive 'https://example.com/myapp.tgz' do
   destination '/opt/myapp'
-end
-
-remote_file "#{Chef::Config[:file_cache_path]}/myapp.tgz" do
-  source 'https://example.com/myapp.tgz'
-  notifies :unpack, 'poise_archive[myapp.tgz]', :immediately
 end
 ```
 
@@ -45,6 +39,19 @@ poise_archive '/tmp/myapp-1.2.0.tar' do
 end
 ```
 
+A URL can also be passed as the source path, optionally with extra properties to
+be merged with `source_properties`.
+
+```ruby
+poise_archive 'http://example.com/myapp-1.2.0.zip' do
+  destination '/srv/myapp-1.2.0'
+end
+
+poise_archive ['http://example.com/myapp-1.2.0.zip', {headers: {'Authentication' => '...'}}] do
+  destination '/srv/myapp-1.2.0'
+end
+```
+
 #### Actions
 
 * `:unpack` – Unpack the archive. *(default)*
@@ -52,12 +59,16 @@ end
 #### Properties
 
 * `path` – Path to the archive. If relative, it is taken as a file inside
-  `Chef::Config[:file_cache_path]`. *(name attribute)*
+  `Chef::Config[:file_cache_path]`. If a URL, it is downloaded to a cache file
+  first. *(name attribute)*
 * `destination` – Path to unpack the archive to. If not specified, the path of
-  the archive without the file extension is used. *(default: auto)*
+  the archive without the file extension is used. Required when unpacking from
+  a URL. *(default: auto)*
 * `group` – Group to run the unpack as.
 * `keep_existing` – Keep existing files in the destination directory when
   unpacking. *(default: false)*
+* `source_properties` – Property key/value pairs to be applied to the
+  `remote_file` file resource when downloading a URL. *(default: {retries: 5})*
 * `strip_components` – Number of intermediary directories to skip when
   unpacking. Works like GNU tar's `--strip-components`. *(default: 1)*
 * `user` – User to run the unpack as.

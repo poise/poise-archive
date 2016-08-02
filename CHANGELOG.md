@@ -1,5 +1,9 @@
 # Poise-Archive Changelog
 
+## v1.3.0
+
+* Add support for unpacking directly from a URL.
+
 ## v1.2.1
 
 * [#1](https://github.com/poise/poise-archive/issues/1) Restore file permissions
