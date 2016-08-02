@@ -52,14 +52,18 @@ describe PoiseArchive::ArchiveProviders::Tar do
       expect_file('/test/myapp/LICENSE', "This is in the public domain.\n", 0644)
       expect_file('/test/myapp/README', "This is a project!\n\n", 0644)
       expect(Dir).to receive(:mkdir).with('/test/myapp/src', 0755)
+      expect(Dir).to receive(:mkdir).with('/test/myapp/bin', 0755)
       expect_file('/test/myapp/src/main.c', "int main(int argc, char **argv)\n{\n  return 0;\n}\n\n", 0644)
+      expect_file('/test/myapp/bin/run.sh', "#!/bin/sh\necho \"Started!\"\n", 0755)
       run_chef
       expect(archive_provider).to be_a described_class
       expect(chef_run).to create_directory('/test/myapp').with(user: 'myuser', group: nil)
       expect(chef_run).to create_directory('/test/myapp/src').with(user: 'myuser', group: nil)
+      expect(chef_run).to create_directory('/test/myapp/bin').with(user: 'myuser', group: nil)
       expect(chef_run).to create_file('/test/myapp/LICENSE').with(user: 'myuser', group: nil)
       expect(chef_run).to create_file('/test/myapp/README').with(user: 'myuser', group: nil)
       expect(chef_run).to create_file('/test/myapp/src/main.c').with(user: 'myuser', group: nil)
+      expect(chef_run).to create_file('/test/myapp/bin/run.sh').with(user: 'myuser', group: nil)
     end
   end
 
