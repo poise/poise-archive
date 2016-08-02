@@ -58,7 +58,8 @@ module PoiseArchive
         if new_resource.is_url?
           download_resource = download_file
           # Check if the download resource updated, if not don't run the rest
-          # of the unpack for idempotence.
+          # of the unpack for idempotence. I could also check
+          # new_resource.updated? but this seems more future proof.
           return if !download_resource.updated_by_last_action?
         end
         converge_by("unpack archive #{new_resource.path} to #{new_resource.destination}") do
@@ -76,9 +77,7 @@ module PoiseArchive
       #
       # @return [Chef::Resource]
       def download_file
-        # resource_state used for closure
-        # breaking on the notifying block. I could also check new_resource.updated?
-        # but this seems more future proof.
+        # resource_state used for closure breaking on the notifying block.
         resource_state = []
         notifying_block do
           # TODO handle cookbook:// for cookbook_file "downloads".
