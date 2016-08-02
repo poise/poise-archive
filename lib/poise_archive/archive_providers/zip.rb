@@ -56,6 +56,10 @@ module PoiseArchive
             next if entry_name.empty?
             entry_path = ::File.join(new_resource.destination, entry_name)
             entry.extract(entry_path)
+            # Make sure we restore file permissions. RubyZip won't do this
+            # unless we also turn on UID/GID restoration, which we don't want.
+            # Mask filters out setuid and setgid bits because no.
+            ::File.chmod(entry.unix_perms & 01777, entry_path) if !node.platform_family?('windows') && entry.unix_perms
             @zip_entry_paths << [entry.directory? ? :directory : entry.file? ? :file : :link, entry_path]
           end
         end

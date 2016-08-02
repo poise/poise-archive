@@ -38,6 +38,10 @@ RSpec.shared_examples 'a poise_archive test' do |ext|
   describe file("#{base}/src/main.c") do
     it { is_expected.to be_a_file }
   end
+  describe file("#{base}/bin/run.sh") do
+    it { is_expected.to be_a_file }
+    it { is_expected.to be_mode '755' } unless os[:family] == 'windows'
+  end
   describe file("#{base}_0/myapp-1.0.0/src/main.c") do
     it { is_expected.to be_a_file }
   end
@@ -51,6 +55,10 @@ RSpec.shared_examples 'a poise_archive test' do |ext|
   describe file("#{base}_user/README") do
     it { is_expected.to be_owned_by 'poise' }
     it { is_expected.to be_mode '644' } unless os[:family] == 'windows'
+  end
+  describe file("#{base}_user/bin/run.sh") do
+    it { is_expected.to be_owned_by 'poise' }
+    it { is_expected.to be_mode '755' } unless os[:family] == 'windows'
   end
 end
 
