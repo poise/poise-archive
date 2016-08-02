@@ -56,23 +56,10 @@ module PoiseArchive
       # @return [void]
       def action_unpack
         if new_resource.is_url?
-          # Download the file to a cache path. resource_state used for closure
-          # breaking on the notifying block. I could also check new_resource.updated?
-          # but this seems more future proof.
-          resource_state = []
-          notifying_block do
-            # TODO handle cookbook:// for cookbook_file "downloads".
-            resource_state << remote_file(new_resource.absolute_path) do
-              source new_resource.path
-              retries 5 # As a default, could be overridden by source_options.
-              new_resource.source_options.each do |key, value|
-                send(key, value)
-              end
-            end
-          end
+          download_resource = download_file
           # Check if the download resource updated, if not don't run the rest
           # of the unpack for idempotence.
-          return if !resource_state.first.updated_by_last_action?
+          return if !download_resource.updated_by_last_action?
         end
         converge_by("unpack archive #{new_resource.path} to #{new_resource.destination}") do
           notifying_block do
@@ -84,6 +71,28 @@ module PoiseArchive
       end
 
       private
+
+      # Download the source file to a cache path.
+      #
+      # @return [Chef::Resource]
+      def download_file
+        # resource_state used for closure
+        # breaking on the notifying block. I could also check new_resource.updated?
+        # but this seems more future proof.
+        resource_state = []
+        notifying_block do
+          # TODO handle cookbook:// for cookbook_file "downloads".
+          resource_state << remote_file(new_resource.absolute_path) do
+            source new_resource.path
+            retries 5 # As a default, could be overridden by source_properties.
+            new_resource.merged_source_properties.each do |key, value|
+              send(key, value)
+            end
+          end
+        end
+        # Return the download resource for state tracking.
+        resource_state.first
+      end
 
       # Make sure the destination directory exists.
       #

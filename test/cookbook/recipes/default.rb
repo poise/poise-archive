@@ -29,6 +29,23 @@ user 'poise' do
   system true
 end
 
+# Directory for HTTP serving.
+directory '/test_http' do
+  mode '777'
+end
+
+# Copy all fixture files for HTTP serving.
+%w{tar tar.gz tar.bz2 zip}.each do |ext|
+  cookbook_file "/test_http/myapp-1.0.0.#{ext}" do
+    source "myapp-1.0.0.#{ext}"
+  end
+end
+
+# Start up a background web server.
+require 'webrick'
+server = WEBrick::HTTPServer.new(Port: 8000, DocumentRoot: '/test_http')
+Thread.new { server.start }
+
 # Tests for each fixture file.
 [
   {ext: 'tar', provider: nil},
@@ -77,6 +94,12 @@ end
     destination "#{test_base}/#{test[:ext]}_user"
     provider test[:provider] if test[:provider]
     user 'poise'
+  end
+
+  poise_archive "#{test_base}/myapp-1.0.0.#{test[:ext]}_http" do
+    path "http://localhost:8000/myapp-1.0.0.#{test[:ext]}"
+    destination "#{test_base}/#{test[:ext]}_http"
+    provider test[:provider] if test[:provider]
   end
 end
 

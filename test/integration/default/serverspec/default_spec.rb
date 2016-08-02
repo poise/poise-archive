@@ -60,6 +60,12 @@ RSpec.shared_examples 'a poise_archive test' do |ext|
     it { is_expected.to be_owned_by 'poise' }
     it { is_expected.to be_mode '755' } unless os[:family] == 'windows'
   end
+  describe file("#{base}_http/README") do
+    its(:content) { is_expected.to eq "This is a project!\n\n" }
+  end
+  describe file("#{base}_http/src/main.c") do
+    it { is_expected.to be_a_file }
+  end
 end
 
 describe 'default provider' do

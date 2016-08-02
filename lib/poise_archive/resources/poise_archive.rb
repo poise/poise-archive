@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+require 'base64'
 require 'uri'
 
 require 'chef/resource'
@@ -45,7 +46,7 @@ module PoiseArchive
         #   `Chef::Config[:file_cache_path]`. Can also be a URL to download the
         #   archive from.
         #   @return [String, Array]
-        attribute(:path, kind_of: String, default: lazy { name.is_a?(Array) ? name[0] : name }, required: true)
+        attribute(:path, kind_of: String, default: lazy { @raw_name.is_a?(Array) ? @raw_name[0] : name }, required: true)
         # @!attribute destination
         #   Path to unpack the archive to. If not specified, the path of the
         #   archive without the file extension is used.
@@ -63,7 +64,7 @@ module PoiseArchive
         #   Properties to pass through to the underlying download resource if
         #   using one. Merged with the array form of {#name}.
         #   @return [Hash]
-        attribute(:source_properties, option_collector: true, default: lazy { name.is_a?(Array) ? (name[1] || {}) : {} })
+        attribute(:source_properties, option_collector: true, forced_keys: %i{retries})
         # @!attribute strip_components
         #   Number of intermediary directories to skip when unpacking. Works
         #   like GNU tar's --strip-components.
@@ -77,6 +78,11 @@ module PoiseArchive
         # Alias for the forgetful.
         # @api private
         alias_method :owner, :user
+
+        def initialize(name, run_context)
+          @raw_name = name # Capture this before it gets coerced to a string.
+          super
+        end
 
         # Regexp for URL-like paths.
         # @api private
@@ -97,11 +103,26 @@ module PoiseArchive
         # @return [String]
         def absolute_path
           if is_url?
-            # Use the last path component without the query string. This might
-            # result in collisions in weird cases?
-            ::File.join(Chef::Config[:file_cache_path], URI(path).path.split(/\//).last)
+            # Use the last path component without the query string plus the name
+            # of the resource in Base64. This should be both mildly readable and
+            # also unique per invocation.
+            url_part = URI(path).path.split(/\//).last
+            base64_name = Base64.strict_encode64(name).gsub(/\=/, '')
+            ::File.join(Chef::Config[:file_cache_path], "#{base64_name}_#{url_part}")
           else
             ::File.expand_path(path, Chef::Config[:file_cache_path])
+          end
+        end
+
+        # Merge the explicit source properties with the array form of the name.
+        #
+        # @api private
+        # @return [Hash]
+        def merged_source_properties
+          if @raw_name.is_a?(Array) && @raw_name[1]
+            source_properties.merge(@raw_name[1])
+          else
+            source_properties
           end
         end
 

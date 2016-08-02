@@ -148,4 +148,54 @@ describe PoiseArchive::Resources::PoiseArchive do
 
     it { is_expected.to unpack_poise_archive('/tmp/myapp-1.0.0.tar.gz').with(absolute_path: '/tmp/myapp-1.0.0.tar.gz', destination: '/tmp/myapp-1.0.0') }
   end # /context with a version number and .tar.gz
+
+  context 'with a URL' do
+    recipe do
+      Chef::Config[:file_cache_path] = '/var/chef/cache'
+      poise_archive 'http://example.com/myapp-1.0.0.zip' do
+        destination '/tmp/myapp'
+      end
+    end
+
+    it { is_expected.to unpack_poise_archive('http://example.com/myapp-1.0.0.zip').with(path: 'http://example.com/myapp-1.0.0.zip', absolute_path: '/var/chef/cache/aHR0cDovL2V4YW1wbGUuY29tL215YXBwLTEuMC4wLnppcA_myapp-1.0.0.zip', destination: '/tmp/myapp', merged_source_properties: {}) }
+  end # /context with a URL
+
+  context 'with a URL and name properties' do
+    recipe do
+      Chef::Config[:file_cache_path] = '/var/chef/cache'
+      poise_archive ['http://example.com/myapp-1.0.0.zip', {retries: 0}] do
+        destination '/tmp/myapp'
+      end
+    end
+
+    it { is_expected.to unpack_poise_archive('http://example.com/myapp-1.0.0.zip, {:retries=>0}').with(path: 'http://example.com/myapp-1.0.0.zip', absolute_path: '/var/chef/cache/aHR0cDovL2V4YW1wbGUuY29tL215YXBwLTEuMC4wLnppcCwgezpyZXRyaWVzPT4wfQ_myapp-1.0.0.zip', destination: '/tmp/myapp', merged_source_properties: {'retries' => 0}) }
+  end # /context with a URL and name properties
+
+  context 'with a URL and source properties' do
+    recipe do
+      Chef::Config[:file_cache_path] = '/var/chef/cache'
+      poise_archive 'http://example.com/myapp-1.0.0.zip' do
+        destination '/tmp/myapp'
+        source_properties do
+          retries 0
+        end
+      end
+    end
+
+    it { is_expected.to unpack_poise_archive('http://example.com/myapp-1.0.0.zip').with(path: 'http://example.com/myapp-1.0.0.zip', absolute_path: '/var/chef/cache/aHR0cDovL2V4YW1wbGUuY29tL215YXBwLTEuMC4wLnppcA_myapp-1.0.0.zip', destination: '/tmp/myapp', merged_source_properties: {'retries' => 0}) }
+  end # /context with a URL and source properties
+
+  context 'with a URL and both properties' do
+    recipe do
+      Chef::Config[:file_cache_path] = '/var/chef/cache'
+      poise_archive ['http://example.com/myapp-1.0.0.zip', {retries: 100}] do
+        destination '/tmp/myapp'
+        source_properties do
+          retries 0
+        end
+      end
+    end
+
+    it { is_expected.to unpack_poise_archive('http://example.com/myapp-1.0.0.zip, {:retries=>100}').with(path: 'http://example.com/myapp-1.0.0.zip', absolute_path: '/var/chef/cache/aHR0cDovL2V4YW1wbGUuY29tL215YXBwLTEuMC4wLnppcCwgezpyZXRyaWVzPT4xMDB9_myapp-1.0.0.zip', destination: '/tmp/myapp', merged_source_properties: {'retries' => 100}) }
+  end # /context with a URL and both properties
 end
