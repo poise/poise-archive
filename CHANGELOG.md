@@ -1,5 +1,10 @@
 # Poise-Archive Changelog
 
+## v1.2.1
+
+* [#1](https://github.com/poise/poise-archive/issues/1) Restore file permissions
+  for ZIP files.
+
 ## v1.2.0
 
 * Add back a tar-binary provider called `GnuTar`, used by default on Linux.
