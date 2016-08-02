@@ -108,8 +108,8 @@ module PoiseArchive
       #
       # @return [void]
       def open_file!
-        @raw_file = ::File.open(new_resource.path, 'rb')
-        @file = case new_resource.path
+        @raw_file = ::File.open(new_resource.absolute_path, 'rb')
+        @file = case new_resource.absolute_path
         when /\.tar$/
           nil # So it uses @raw_file instead.
         when /\.t?gz/

@@ -49,7 +49,7 @@ module PoiseArchive
 
       def unpack_zip
         @zip_entry_paths = []
-        ::Zip::File.open(new_resource.path) do |zip_file|
+        ::Zip::File.open(new_resource.absolute_path) do |zip_file|
           zip_file.each do |entry|
             entry_name = entry.name.split(/\//).drop(new_resource.strip_components).join('/')
             # If strip_components wiped out the name, don't process this entry.

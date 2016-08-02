@@ -51,8 +51,8 @@ module PoiseArchive
       # @return [void]
       def install_prereqs
         utils = ['tar']
-        utils << 'bzip2' if new_resource.path =~ /\.t?bz/
-        utils << 'xz-utils' if new_resource.path =~ /\.t?xz/
+        utils << 'bzip2' if new_resource.absolute_path =~ /\.t?bz/
+        utils << 'xz-utils' if new_resource.absolute_path =~ /\.t?xz/
         # This is a resource.
         package utils
       end
@@ -64,17 +64,17 @@ module PoiseArchive
         # Build the tar command.
         cmd = %w{tar}
         cmd << "--strip-components=#{new_resource.strip_components}" if new_resource.strip_components && new_resource.strip_components > 0
-        cmd << if new_resource.path =~ /\.t?gz/
+        cmd << if new_resource.absolute_path =~ /\.t?gz/
           '-xzvf'
-        elsif new_resource.path =~ /\.t?bz/
+        elsif new_resource.absolute_path =~ /\.t?bz/
           '-xjvf'
-        elsif new_resource.path =~ /\.t?xz/
+        elsif new_resource.absolute_path =~ /\.t?xz/
           '-xJvf'
         else
           '-xvf'
         end
-        cmd << new_resource.path
-        poise_shell_out!(cmd, cwd: new_resource.absolute_destination, group: new_resource.group, user: new_resource.user)
+        cmd << new_resource.absolute_path
+        poise_shell_out!(cmd, cwd: new_resource.destination, group: new_resource.group, user: new_resource.user)
       end
 
     end
