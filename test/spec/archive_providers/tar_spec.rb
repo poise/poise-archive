@@ -20,6 +20,7 @@ FIXTURES_PATH = File.expand_path('../../../cookbook/files', __FILE__)
 
 describe PoiseArchive::ArchiveProviders::Tar do
   step_into(:poise_archive)
+  let(:chefspec_options) { {platform: 'mac_os_x', version: '10.12'} }
   let(:archive_provider) { chef_run.poise_archive('myapp').provider_for_action(:unpack) }
   before do
     expect(Dir).to receive(:mkdir).and_call_original
