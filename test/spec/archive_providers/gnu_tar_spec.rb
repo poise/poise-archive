@@ -16,8 +16,6 @@
 
 require 'spec_helper'
 
-FIXTURES_PATH = File.expand_path('../../../cookbook/files', __FILE__)
-
 describe PoiseArchive::ArchiveProviders::GnuTar do
   step_into(:poise_archive)
   let(:archive_provider) { chef_run.poise_archive('myapp').provider_for_action(:unpack) }
