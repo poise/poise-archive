@@ -21,10 +21,14 @@ poise_archive 'https://example.com/myapp.tgz' do
 end
 ```
 
+## Requirements
+
+Chef 12.1 or newer is required.
+
 ## Platforms
 
-This cookbook supports all platforms (including Windows) but non-Linux platforms
-may see very slow tar file unpacking when using the pure-Ruby fallback
+This cookbook supports all platforms (including Windows) but some Unix platforms
+(Solaris, AIX) may see very slow tar file unpacking when using the pure-Ruby fallback
 implementation.
 
 ## Resources
