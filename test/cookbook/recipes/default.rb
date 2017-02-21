@@ -43,7 +43,17 @@ end
 
 # Start up a background web server.
 require 'webrick'
-server = WEBrick::HTTPServer.new(Port: 8000, DocumentRoot: '/test_http')
+server = WEBrick::HTTPServer.new(
+  Port: 8000,
+  DocumentRoot: '/test_http',
+  # We need to be careful to disable all logging to stderr since that is an
+  # error of its own on Windows because of how TK detects failures.
+  Logger: Chef::Log,
+  AccessLog: [
+    [Chef::Log, WEBrick::AccessLog::COMMON_LOG_FORMAT],
+    [Chef::Log, WEBrick::AccessLog::REFERER_LOG_FORMAT],
+  ],
+)
 Thread.new { server.start }
 
 # Tests for each fixture file.
