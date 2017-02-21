@@ -60,9 +60,9 @@ module PoiseArchive
       # @return [void]
       def install_seven_zip
         url = seven_zip_url
-        path = "#{windows_path(Chef::Config[:file_cache_path])}\\#{url.split(/\//).last}"
+        path = "#{Chef::Config[:file_cache_path]}/#{url.split(/\//).last}"
 
-        install = execute "#{path} /S /D=#{seven_zip_home}" do
+        install = execute "#{windows_path(path)} /S /D=#{seven_zip_home}" do
           action :nothing
         end
 
