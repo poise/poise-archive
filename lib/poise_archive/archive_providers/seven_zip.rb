@@ -178,7 +178,9 @@ module PoiseArchive
       #
       # @api private
       def self.mktmpdir(*args, &block)
+        # :nocov:
         Dir.mktmpdir(*args, &block)
+        # :nocov:
       end
 
     end
