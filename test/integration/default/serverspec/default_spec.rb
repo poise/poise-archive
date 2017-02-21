@@ -128,6 +128,28 @@ describe 'Zip provider' do
   end
 end
 
+describe 'SevenZip provider', if: File.exist?('/test/SevenZip') do
+  describe 'tar' do
+    it_should_behave_like 'a poise_archive test', 'SevenZip/tar'
+  end
+
+  describe 'tar.gz' do
+    it_should_behave_like 'a poise_archive test', 'SevenZip/tar.gz'
+  end
+
+  describe 'tar.bz2' do
+    it_should_behave_like 'a poise_archive test', 'SevenZip/tar.bz2'
+  end
+
+  describe 'tar.xz' do
+    it_should_behave_like 'a poise_archive test', 'SevenZip/tar.xz'
+  end
+
+  describe 'zip' do
+    it_should_behave_like 'a poise_archive test', 'SevenZip/zip'
+  end
+end
+
 describe 'core features' do
   describe file('/test/keep/EXISTING') do
     it { is_expected.to be_a_file }

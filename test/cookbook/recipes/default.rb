@@ -61,6 +61,11 @@ Thread.new { server.start }
   {ext: 'tar.bz2', provider: PoiseArchive::ArchiveProviders::GnuTar, only_if: proc { node['os'] == 'linux' }},
   {ext: 'tar.xz', provider: PoiseArchive::ArchiveProviders::GnuTar, only_if: proc { node['os'] == 'linux' }},
   {ext: 'zip', provider: PoiseArchive::ArchiveProviders::Zip},
+  {ext: 'tar', provider: PoiseArchive::ArchiveProviders::SevenZip, only_if: proc { node['platform_family'] == 'windows' }},
+  {ext: 'tar.gz', provider: PoiseArchive::ArchiveProviders::SevenZip, only_if: proc { node['platform_family'] == 'windows' }},
+  {ext: 'tar.bz2', provider: PoiseArchive::ArchiveProviders::SevenZip, only_if: proc { node['platform_family'] == 'windows' }},
+  {ext: 'tar.xz', provider: PoiseArchive::ArchiveProviders::SevenZip, only_if: proc { node['platform_family'] == 'windows' }},
+  {ext: 'zip', provider: PoiseArchive::ArchiveProviders::SevenZip, only_if: proc { node['platform_family'] == 'windows' }},
 ].each do |test|
   next if test[:only_if] && !test[:only_if].call
   test_base = "/test/#{test[:provider].to_s.split('::').last || 'default'}"
