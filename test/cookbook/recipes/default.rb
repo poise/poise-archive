@@ -35,7 +35,7 @@ directory '/test_http' do
 end
 
 # Copy all fixture files for HTTP serving.
-%w{tar tar.gz tar.bz2 zip}.each do |ext|
+%w{tar tar.gz tar.bz2 tar.xz zip}.each do |ext|
   cookbook_file "/test_http/myapp-1.0.0.#{ext}" do
     source "myapp-1.0.0.#{ext}"
   end
@@ -51,6 +51,7 @@ Thread.new { server.start }
   {ext: 'tar', provider: nil},
   {ext: 'tar.gz', provider: nil},
   {ext: 'tar.bz2', provider: nil},
+  {ext: 'tar.xz', provider: nil},
   {ext: 'zip', provider: nil},
   {ext: 'tar', provider: PoiseArchive::ArchiveProviders::Tar},
   {ext: 'tar.gz', provider: PoiseArchive::ArchiveProviders::Tar},
@@ -58,6 +59,7 @@ Thread.new { server.start }
   {ext: 'tar', provider: PoiseArchive::ArchiveProviders::GnuTar, only_if: proc { node['os'] == 'linux' }},
   {ext: 'tar.gz', provider: PoiseArchive::ArchiveProviders::GnuTar, only_if: proc { node['os'] == 'linux' }},
   {ext: 'tar.bz2', provider: PoiseArchive::ArchiveProviders::GnuTar, only_if: proc { node['os'] == 'linux' }},
+  {ext: 'tar.xz', provider: PoiseArchive::ArchiveProviders::GnuTar, only_if: proc { node['os'] == 'linux' }},
   {ext: 'zip', provider: PoiseArchive::ArchiveProviders::Zip},
 ].each do |test|
   next if test[:only_if] && !test[:only_if].call

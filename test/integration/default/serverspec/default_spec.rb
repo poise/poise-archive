@@ -81,6 +81,10 @@ describe 'default provider' do
     it_should_behave_like 'a poise_archive test', 'default/tar.bz2'
   end
 
+  describe 'tar.xz' do
+    it_should_behave_like 'a poise_archive test', 'default/tar.xz'
+  end
+
   describe 'zip' do
     it_should_behave_like 'a poise_archive test', 'default/zip'
   end
@@ -111,6 +115,10 @@ describe 'GnuTar provider', if: File.exist?('/test/GnuTar') do
 
   describe 'tar.bz2' do
     it_should_behave_like 'a poise_archive test', 'GnuTar/tar.bz2'
+  end
+
+  describe 'tar.xz' do
+    it_should_behave_like 'a poise_archive test', 'GnuTar/tar.xz'
   end
 end
 

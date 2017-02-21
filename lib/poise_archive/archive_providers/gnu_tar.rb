@@ -52,7 +52,13 @@ module PoiseArchive
       def install_prereqs
         utils = ['tar']
         utils << 'bzip2' if new_resource.absolute_path =~ /\.t?bz/
-        utils << 'xz-utils' if new_resource.absolute_path =~ /\.t?xz/
+        if new_resource.absolute_path =~ /\.t?xz/
+          xz_package = node.value_for_platform_family(
+            debian: 'xz-utils',
+            rhel: 'xz',
+          )
+          utils << xz_package if xz_package
+        end
         # This is a resource.
         package utils
       end
