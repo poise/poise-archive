@@ -36,17 +36,17 @@ RSpec.shared_examples 'a poise_archive test' do |ext|
     its(:content) { is_expected.to eq "This is a project!\n\n" }
   end
   describe file("#{base}/src/main.c") do
-    it { is_expected.to be_a_file }
+    its(:content) { is_expected.to eq "int main(int argc, char **argv)\n{\n  return 0;\n}\n\n" }
   end
   describe file("#{base}/bin/run.sh") do
-    it { is_expected.to be_a_file }
+    its(:content) { is_expected.to eq "#!/bin/sh\necho \"Started!\"\n" }
     it { is_expected.to be_mode '755' } unless os[:family] == 'windows'
   end
   describe file("#{base}_0/myapp-1.0.0/src/main.c") do
-    it { is_expected.to be_a_file }
+    its(:content) { is_expected.to eq "int main(int argc, char **argv)\n{\n  return 0;\n}\n\n" }
   end
   describe file("#{base}_2/main.c") do
-    it { is_expected.to be_a_file }
+    its(:content) { is_expected.to eq "int main(int argc, char **argv)\n{\n  return 0;\n}\n\n" }
   end
   describe file("#{base}_user") do
     it { is_expected.to be_owned_by 'poise' }
@@ -64,7 +64,7 @@ RSpec.shared_examples 'a poise_archive test' do |ext|
     its(:content) { is_expected.to eq "This is a project!\n\n" }
   end
   describe file("#{base}_http/src/main.c") do
-    it { is_expected.to be_a_file }
+    its(:content) { is_expected.to eq "int main(int argc, char **argv)\n{\n  return 0;\n}\n\n" }
   end
 end
 
