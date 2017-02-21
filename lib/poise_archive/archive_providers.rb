@@ -29,10 +29,10 @@ module PoiseArchive
   module ArchiveProviders
     # Set up priority maps
     Chef::Platform::ProviderPriorityMap.instance.priority(:poise_archive, [
+      PoiseArchive::ArchiveProviders::Zip,
       PoiseArchive::ArchiveProviders::GnuTar,
       PoiseArchive::ArchiveProviders::SevenZip,
       PoiseArchive::ArchiveProviders::Tar,
-      PoiseArchive::ArchiveProviders::Zip,
     ])
   end
 end
