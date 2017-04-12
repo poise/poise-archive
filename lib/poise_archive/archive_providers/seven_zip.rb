@@ -112,12 +112,7 @@ module PoiseArchive
       def move_files(tmpdir)
         entries_at_depth(tmpdir, new_resource.strip_components).each do |source|
           target = ::File.join(new_resource.destination, ::File.basename(source))
-          # If we are in keep_existing mode, the target might exist already.
-          # This is not a great solution and won't have exactly the same behavior
-          # as the other providers, but it's something at least.
-          FileUtils.rm_rf(target) if ::File.exist?(target)
-          # At some point this might need to fall back to a real copy.
-          ::File.rename(source, target)
+          FileUtils.mv(source, target, secure: true)
         end
       end
 
