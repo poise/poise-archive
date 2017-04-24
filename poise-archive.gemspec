@@ -26,7 +26,8 @@ Gem::Specification.new do |spec|
   spec.description = 'A Chef cookbook for unpacking file archives like tar and zip.'
   spec.summary = spec.description
   spec.homepage = 'https://github.com/poise/poise-archive'
-  spec.license = 'Apache 2.0'
+  spec.license = 'Apache-2.0'
+  spec.metadata['platforms'] = 'any'
 
   spec.files = `git ls-files`.split($/)
   spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
