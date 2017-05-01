@@ -38,7 +38,7 @@ describe PoiseArchive::ArchiveProviders::SevenZip do
   end
 
   # Because there isn't a built-in matcher for this.
-  RSpec::Matchers.define :nothing_execute do |name|
+  RSpec::Matchers.define :not_execute do |name|
     match do |chef_run|
       chef_run.execute(name).performed_actions == []
     end
@@ -61,7 +61,7 @@ describe PoiseArchive::ArchiveProviders::SevenZip do
       run_chef
       expect(archive_provider).to be_a described_class
       expect(chef_run).to create_remote_file('/cache/7z1604-x64.exe').with(source: 'http://www.7-zip.org/a/7z1604-x64.exe')
-      expect(chef_run).to nothing_execute('\\cache\\7z1604-x64.exe /S /D=\\cache\\seven_zip_16.04')
+      expect(chef_run).to not_execute('\\cache\\7z1604-x64.exe /S /D=\\cache\\seven_zip_16.04')
     end
   end # /context with defaults
 
