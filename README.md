@@ -51,7 +51,23 @@ poise_archive 'http://example.com/myapp-1.2.0.zip' do
   destination '/srv/myapp-1.2.0'
 end
 
-poise_archive ['http://example.com/myapp-1.2.0.zip', {headers: {'Authentication' => '...'}}] do
+poise_archive ['http://example.com/myapp-1.2.0.zip', {headers: {'User-Agent' => 'myrecipe-1.0.0'}}] do
+  destination '/srv/myapp-1.2.0'
+end
+```
+
+To pass sensitive information like authentication credentials, use the `path`
+or `source_properties` properties:
+
+```ruby
+poise_archive 'myapp.zip' do
+  path "https://username@#{password}:example.com/myapp-1.2.0.zip"
+  destination '/srv/myapp-1.2.0'
+end
+
+poise_archive  do
+  path 'http://example.com/myapp-1.2.0.zip'
+  source_properties headers: {'X-Auth-Token' => token}
   destination '/srv/myapp-1.2.0'
 end
 ```
