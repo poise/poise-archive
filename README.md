@@ -61,7 +61,7 @@ or `source_properties` properties:
 
 ```ruby
 poise_archive 'myapp.zip' do
-  path "https://username@#{password}:example.com/myapp-1.2.0.zip"
+  path "https://username:#{password}@example.com/myapp-1.2.0.zip"
   destination '/srv/myapp-1.2.0'
 end
 
