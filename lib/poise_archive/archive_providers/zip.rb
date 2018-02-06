@@ -44,7 +44,9 @@ module PoiseArchive
       end
 
       def install_rubyzip
-        chef_gem 'rubyzip'
+        chef_gem 'rubyzip' do
+          compile_time true
+        end
       end
 
       def unpack_zip
